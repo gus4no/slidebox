@@ -26,7 +26,7 @@ angular.module('Slidebox', [])
         replace: true,
         transclude: true,
         restrict: 'AE',
-        scope: { length: '@length' },
+        scope: { length: '@length', update: '@update' },
         link: function ($scope, element, attrs) {
           $scope.$watch('length', function(newValue, oldValue){
             if(newValue != ''){
@@ -35,8 +35,12 @@ angular.module('Slidebox', [])
             }
           });
 
+          $scope.$watch('update', function(newValue, oldValue){
+            if (newValue && newValue != oldValue) { recalculateWidths(); }
+          });
+
           $scope.$parent.$watch('vm.finishedRender', function(newValue, oldValue){
-            if(newValue == true){
+            if(newValue != oldValue){
               items = content.children[0].getElementsByClassName('slidebox-item');
               setItemsWidth(itemWidth);
               setIndicators(true);
